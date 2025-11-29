@@ -3,4 +3,4 @@
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=6509a207049040f4a0f9eb7e6576efc2:345865cdc0b99c24cd7fb787dec3b688
-hhttps://awslive01.stan.video/out/v1/51b17a346fda42d99033eb4a3a0aed36/index.mpd?aws.manifestfilter=video_codec%3Ah265&maxQuality=hd
+https://awslive01.stan.video/out/v1/51b17a346fda42d99033eb4a3a0aed36/index.mpd?aws.manifestfilter=video_codec%3Ah265&maxQuality=hd
