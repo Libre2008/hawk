@@ -1,5 +1,5 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title"" ,4K Manchester City v Leeds United - Premier League 2025/2026
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,4K Manchester City v Leeds United - Premier League 2025/2026
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=6509a207049040f4a0f9eb7e6576efc2:345865cdc0b99c24cd7fb787dec3b688
