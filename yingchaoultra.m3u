@@ -1,6 +1,6 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,4K Everton v Newcastle - Premier League 2025/2026
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,4K West Ham United v Liverpool - Premier League 2025/2026
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=7530878a94374ff79df9d1a3aab71e75:4b19f45262c7d9b48ce21afaf2cb7131
-https://awslive02.stan.video/out/v1/7787c1f6b35f409d8853f3b85eb81af2/index.mpd?aws.manifestfilter=video_codec%3Ah265&maxQuality=hd
+#KODIPROP:inputstream.adaptive.license_key=2a68dec21a5549faba3def2a08f63aee:23b8492cb76b708bf97ce45331b462be
+https://awslive02.stan.video/out/v1/8cddc0e0832540b2b7d6c84a63ed3b55/index.mpd?aws.manifestfilter=video_codec%3Ah265&maxQuality=hd
