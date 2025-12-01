@@ -1,6 +1,6 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,phdr test
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,NFL - Broncos vs. Commanders
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=002217b8801ddac460e19358b076186f:913cdf5e601a7739a59cf653c6f9e216
-https://g002-sle-us-cmaf-prd-ak.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2509180-210593-24836cb8da1)/master.mpd
+#KODIPROP:inputstream.adaptive.license_key=002255b8c4b748ade2c595095ee2e044:965bf995ce977aa6429f6cdcef614da2
+https://g002-sle-us-cmaf-prd-fy.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2505888-207301-247729391c5)/master.mpd
