@@ -1,6 +1,6 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,NFL - Broncos vs. Commanders
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,NFL - NBA - Suns vs. Lakers
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=002255b8c4b748ade2c595095ee2e044:965bf995ce977aa6429f6cdcef614da2
-https://g002-sle-us-cmaf-prd-fy.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2505888-207301-247729391c5)/master.mpd
+#KODIPROP:inputstream.adaptive.license_key=0022001324253310d9634e2786e2d0a1:2613f3e0caa9af48bde19120d7526629
+https://g002-sle-us-cmaf-prd-cf.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2507427-208840-247ce4ede88)/master.mpd
