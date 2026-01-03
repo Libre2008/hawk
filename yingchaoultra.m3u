@@ -4,3 +4,9 @@
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=0022417ab860f374396002db9b1fec24:9e32e98e3fc0a65ee58ba73bd0be2a25
 https://g002-sle-us-cmaf-prd-cf.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2510690-212103-24890cc5907)/master.mpd
+
+#EXTINF:-1 tvg-id="" tvg-name="" group-title="", Serie A - Juventus vs. Lecce
+#EXTVLCOPT:http-user-agent=Mozilla/5.0
+#EXTVLCOPT:http-referrer=https://www.google.com/
+#EXTVLCOPT:http-header-fields=Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjNkNjg4NGJmLWViMDktNDA1Zi1hOWZjLWU0NGE1NmY3NjZiNiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzODczNTMwOV9VUyIsImVudCI6W3siYmlkIjoibGl2ZV8xOSIsImVwaWQiOjE1MTJ9XSwiaWF0IjoxNzY3NDU1ODk2LCJleHAiOjE3Njc0NjMwOTYsImlzcyI6ImNicyIsImFpZCI6ImNic2kiLCJpc2UiOnRydWUsImp0aSI6IjMyYjA3YmFlLTIyZWItNDQ0NC04MzllLWFhNjYxNGNlNmYzZCJ9._BJekqVxsatTU7UXb4c1KTfir7N8SDfL66xCWZfSruQ
+https://dai.google.com/linear/hls/event/bTBw9lFDQoGhIkIhsuatNQ/master.m3u8
