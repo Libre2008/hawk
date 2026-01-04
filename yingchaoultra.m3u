@@ -2,5 +2,5 @@
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,4K Premier League - Bournemouth v. Arsenal
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=0022417ab860f374396002db9b1fec24:9e32e98e3fc0a65ee58ba73bd0be2a25
-https://g002-sle-us-cmaf-prd-cf.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2510690-212103-24890cc5907)/master.mpd
+#KODIPROP:inputstream.adaptive.license_key=0022e8e9c254aa669adf25af87f047b9:32c80535c2cebd45f13a45cd8efd94b1
+https://g002-sle-us-cmaf-prd-cf.cdn.peacocktv.com/co01/Content/CMAF_CTR-4s/Live/channel(2510698-212111-24891466b0f)/master.mpd
