@@ -88,7 +88,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-11-22T10:45:00Z",
-        "endpoint": "https://ghp.xptvhelper.link/https://raw.githubusercontent.com/xiaobaitulele/xptv/refs/heads/main/main/all.json"
+        "endpoint": "https://raw.githubusercontent.com/xiaobaitulele/xptv/refs/heads/main/main/all.json"
     },
     {
         "id": "vod6",
@@ -218,7 +218,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/4TVBox/Cat/refs/heads/main/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/4TVBox/Cat/refs/heads/main/index.js.md5"
     },
     {
         "id": "cat5",
@@ -229,7 +229,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://9764.kstore.vip/xuenai/catvod/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/Darklessing/catvod/refs/heads/main/douer/index.js.md5"
     },
     {
         "id": "cat6",
@@ -240,7 +240,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/ggboomla/catpaw/crazy/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/ggboomla/catpaw/crazy/index.js.md5"
     },
     {
         "id": "cat7",
@@ -251,7 +251,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/fangkuia/XPTV/main/dist/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/fangkuia/XPTV/main/dist/index.js.md5"
     },
     {
         "id": "cat8",
@@ -262,7 +262,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/Darklessing/catvod/refs/heads/main/lmentor/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/Darklessing/catvod/refs/heads/main/lmentor/index.js.md5"
     },
     {
         "id": "cat9",
@@ -273,7 +273,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/Jsnzkpg/stymei/Jsnzkpg/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/Jsnzkpg/stymei/Jsnzkpg/index.js.md5"
     },
     {
         "id": "cat10",
@@ -284,7 +284,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/wliqi495-create/jaychouqq/refs/heads/main/index.js.md5"
     },
     {
         "id": "cat11",
@@ -295,7 +295,7 @@
         "author": "purkylin",
         "version": "0.0.1",
         "update_time": "2025-07-11T10:45:00Z",
-        "endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/Darklessing/catvod/refs/heads/main/douer/index.js.md5"
+        "endpoint": "https://raw.githubusercontent.com/Darklessing/catvod/refs/heads/main/douer/index.js.md5"
     },
     {
 		"id": "xiaowo",
@@ -361,6 +361,6 @@
 		"author": "purkylin",
 		"version": "0.0.2",
 		"update_time": "2025-11-12T10:45:00Z",
-		"endpoint": "https://gh-proxy.org/https://raw.githubusercontent.com/purkylin/MusicFreePluginsHub/refs/heads/main/dist/plugins.json"
+		"endpoint": "https://raw.githubusercontent.com/purkylin/MusicFreePluginsHub/refs/heads/main/dist/plugins.json"
 	  },
 ]
