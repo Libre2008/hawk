@@ -1,13 +1,9 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,Premier League - Manchester United vs Liverpool
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,[4K] UEFA Champions League - Paris Saint-Germain - Arsenal
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=2422789e60814b13a92961ff034ea16e:e46d7ab741b87fee1c59a4625ce6f0cf
-https://fastlylive02.stan.video/out/v1/6318df16d8534f4c96022fec49668c4e/index.mpd?aws.manifestfilter=video_codec%3Ah265&maxQuality=hd
+#KODIPROP:inputstream.adaptive.license_key=010018fc74079e6a9a7b2cfc9d0a974d:7d094ee6de1789f47477f4777c2cec37,01037c2f5877940f582be701c13192dc:8a7e299c25a35d69825ec7fddfb03378
+https://url.onlysignup.workers.dev/Ht8Tr3
 
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,Premier League - Manchester United vs Liverpool -2
-https://live04.coupangstreaming.com/out/v1/f0de8e1c33a6471da6b8b7cc1387b735/manifest/index.m3u8
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="" ,Premier League - Manchester United vs Liverpool -3
-https://live04.coupangstreaming.com/out/v1/0aede40f87654b2a943b65dd02b94dfd/manifest/index.m3u8
 
 
