@@ -1,0 +1,21 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="Fussball.TV 1 UHD" tvg-name="Fussball.TV 1 UHD" group-title="Fussball.TV UHD",Fussball.TV 1 UHD
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"EC72F335D0E436AC7DC1D936AEA1144A","kid":"E511FB81360C5F14B681605D1DE52046"},{"kty":"oct","k":"98B7133EE006D9FAE111EC0CB366641C","kid":"E1F8FC6898FC5BF7A00B5609AF23FEE0"},{"kty":"oct","k":"17AEA325D91B5E66F06A8C574F2F0B03","kid":"4F558EAE1B005126B2AC6E9EB1a7849E"},{"kty":"oct","k":"9EBDBF32F90B546F66603104B2AC3C8A","kid":"B73F76658D1F5CE38420F380421BAFE3"}]}
+https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_1_UHD/default/index.mpd
+
+#EXTINF:-1 tvg-id="Fussball.TV 2 UHD" tvg-name="Fussball.TV 2 UHD" group-title="Fussball.TV UHD",Fussball.TV 2 UHD
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"8A3721306907FFEF2F9525F0CAB9BC0A","kid":"B2E6C4C0B89655B7BBF2E4C0F4E42A1D"},{"kty":"oct","k":"B7B71A7B99A45B8EBFB3C7AC086FFB09","kid":"A3C8A5741EDF5909991BF27135ECF8C3"},{"kty":"oct","k":"98F63F6475AB21A42E4D64C3967A6AF7","kid":"FDCB9117541E5F9E91EB1EC45753DDEE"},{"kty":"oct","k":"66CF0524FCC2EB0C7DAB8BBBF8829827","kid":"CCDF9F3D9BBF5C508ADF04F81918A285"}]}
+https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_2_UHD/default/index.mpd
+
+#EXTINF:-1 tvg-id="Fussball.TV 3 UHD" tvg-name="Fussball.TV 3 UHD" group-title="Fussball.TV UHD",Fussball.TV 3 UHD
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"E21C3F96D150632E0412D6C83330566B","kid":"33785237771A552C8A83FA3954AC0B7A"},{"kty":"oct","k":"B553DE3ECB805AE9C810DD9AC13B7C62","kid":"66132EB062115009B127A7901A76BD95"},{"kty":"oct","k":"D7F19AE55E394BE80064853CE10BFFCE","kid":"3E968EC945E8560DA5BB39B7CB3C5C0E"},{"kty":"oct","k":"86B7DE3FD4136C2059456C8CB21C929C","kid":"FCC18487881D51109A4C3596E8E8833D"}]}
+https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_3_UHD/default/index.mpd
