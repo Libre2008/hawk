@@ -20,3 +20,12 @@ https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_2_UHD/default/index.mpd
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=33785237771a552c8a83fa3954ac0b7a:e21c3f96d150632e0412d6c83330566b,66132eb062115009b127a7901a76bd95:b553de3ecb805ae9c810dd9ac13b7c62,3e968ec945e8560da5bb39b7cb3c5c0e:d7f19ae55e394be80064853ce10bffce,fcc18487881d51109a4c3596e8e8833d:86b7de3fd4136c2059456c8cb21c929c
 https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_3_UHD/default/index.mpd
+
+#EXTM3U
+
+#EXTINF:-1 tvg-name="México vs. Sudáfrica [4K]" group-title="Sports", [4K] Soccer - México v. Sudáfrica
+#KODIPROP:inputstream=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#KODIPROP:inputstream.adaptive.license_type=clearkey
+#KODIPROP:inputstream.adaptive.license_key=00225c79d15b21ba40c0e6978274c3ec:dd34f29471fd2e7fce87772a53367dda
+https://g002-sle-us-cmaf-prd-fy.cdn.peacocktv.com/v~1-0-0_e~1781289406_f~0_g~1_s~833800ca-69b0-44a2-8868-b72d9ef62b74_u~2fc3181d9bb490b427441c0528378166696e6f4fdd3e61a95168ae5027fde71ce139842a0314078961820ae5a33f83f9_k~A_l~78_x~762edc9109f300f510a4f5fbd75beb66/co01/pcksle2/Content/CMAF_CTR-4s-v2/Live/channel(5021147-723005-49113b9f4fd)/master.mpd
