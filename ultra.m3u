@@ -21,8 +21,6 @@ https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_2_UHD/default/index.mpd
 #KODIPROP:inputstream.adaptive.license_key=33785237771a552c8a83fa3954ac0b7a:e21c3f96d150632e0412d6c83330566b,66132eb062115009b127a7901a76bd95:b553de3ecb805ae9c810dd9ac13b7c62,3e968ec945e8560da5bb39b7cb3c5c0e:d7f19ae55e394be80064853ce10bffce,fcc18487881d51109a4c3596e8e8833d:86b7de3fd4136c2059456c8cb21c929c
 https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_3_UHD/default/index.mpd
 
-#EXTM3U
-
 #EXTINF:-1 tvg-name="México vs. Sudáfrica [4K]" group-title="Sports", [4K] Soccer - México v. Sudáfrica
 #KODIPROP:inputstream=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=mpd
