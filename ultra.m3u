@@ -1,29 +1,5 @@
-#EXTM3U x-tvg-url=""
-
-#EXTINF:-1 tvg-id="Fussball.TV.1.UHD" tvg-name="Fussball.TV 1 UHD" group-title="Fussball.TV",Fussball.TV 1 UHD
-#KODIPROP:inputstream=inputstream.adaptive
-#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#EXTM3U
+#EXTINF:-1 tvg-name="South Korea vs Czechia" tvg-logo="https://www.peacocktv.com/favicon.ico" group-title="Sports",South Korea vs. Czechia (4K)
 #KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=e511fb81360c5f14b681605d1de52046:ec72f335d0e436ac7dc1d936aea1144a,e1f8fc6898fc5bf7a00b5609af23fee0:98b7133ee006d9fae111ec0cb366641c,4f558eae1b005126b2ac6e9eb1a7849e:17aea325d91b5e66f06a8c574f2f0b03,b73f76658d1f5ce38420f380421bafe3:9ebdbf32f90b546f66603104b2ac3c8a
-https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_1_UHD/default/index.mpd
-
-#EXTINF:-1 tvg-id="Fussball.TV.2.UHD" tvg-name="Fussball.TV 2 UHD" group-title="Fussball.TV",Fussball.TV 2 UHD
-#KODIPROP:inputstream=inputstream.adaptive
-#KODIPROP:inputstream.adaptive.manifest_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=b2e6c4c0b89655b7bbf2e4c0f4e42a1d:8a3721306907ffef2f9525f0cab9bc0a,a3c8a5741edf5909991bf27135ecf8c3:b7b71a7b99a45b8ebfb3c7ac086ffb09,fdcb9117541e5f9e91eb1ec45753ddee:98f63f6475ab21a42e4d64c3967a6af7,ccdf9f3d9bbf5c508adf04f81918a285:66cf0524fcc2eb0c7dab8bbbf8829827
-https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_2_UHD/default/index.mpd
-
-#EXTINF:-1 tvg-id="Fussball.TV.3.UHD" tvg-name="Fussball.TV 3 UHD" group-title="Fussball.TV",Fussball.TV 3 UHD
-#KODIPROP:inputstream=inputstream.adaptive
-#KODIPROP:inputstream.adaptive.manifest_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=33785237771a552c8a83fa3954ac0b7a:e21c3f96d150632e0412d6c83330566b,66132eb062115009b127a7901a76bd95:b553de3ecb805ae9c810dd9ac13b7c62,3e968ec945e8560da5bb39b7cb3c5c0e:d7f19ae55e394be80064853ce10bffce,fcc18487881d51109a4c3596e8e8833d:86b7de3fd4136c2059456c8cb21c929c
-https://at-live-7.tentcdn.eu/bpk-tv/WM_TV_3_UHD/default/index.mpd
-
-#EXTINF:-1 tvg-name="México vs. Sudáfrica [4K]" group-title="Sports", [4K] Soccer - México v. Sudáfrica
-#KODIPROP:inputstream=inputstream.adaptive
-#KODIPROP:inputstream.adaptive.manifest_type=mpd
-#KODIPROP:inputstream.adaptive.license_type=clearkey
-#KODIPROP:inputstream.adaptive.license_key=00225c79d15b21ba40c0e6978274c3ec:dd34f29471fd2e7fce87772a53367dda
-https://g002-sle-us-cmaf-prd-fy.cdn.peacocktv.com/v~1-0-0_e~1781289406_f~0_g~1_s~833800ca-69b0-44a2-8868-b72d9ef62b74_u~2fc3181d9bb490b427441c0528378166696e6f4fdd3e61a95168ae5027fde71ce139842a0314078961820ae5a33f83f9_k~A_l~78_x~762edc9109f300f510a4f5fbd75beb66/co01/pcksle2/Content/CMAF_CTR-4s-v2/Live/channel(5021147-723005-49113b9f4fd)/master.mpd
+#KODIPROP:inputstream.adaptive.license_key=00220a58e27d32911826ee42d068776b:bb007d4998a7602efb38de3de2163053
+https://g002-sle-us-cmaf-prd-ak.cdn.peacocktv.com/v~a-0-0_e~1781314218_s~540e7fcb-0bbd-4ba6-8bde-53cc11f5b107_u~2fc3181d9bb490b427441c0528378166696e6f4fdd3e61a95168ae5027fde71ce139842a0314078961820ae5a33f83f9_l~78_x~040b43f116d353cfccadf5047f332ab85c4ced7637d7d3e0015ee037d9d1b800/co01/pcksle2/Content/CMAF_CTR-4s-v2/Live/channel(5021370-723228-4912104ab9c)/master.mpd
