@@ -41,7 +41,9 @@
   function flexGapOk() {
     var f = D.createElement("div");
     f.style.cssText = "display:flex;flex-direction:column;position:absolute;visibility:hidden;width:1px;gap:1px;";
-    f.appendChild(D.createElement("div")); f.appendChild(D.createElement("div"));
+    var c1 = D.createElement("div"), c2 = D.createElement("div");
+    c1.style.height = "1px"; c2.style.height = "1px";
+    f.appendChild(c1); f.appendChild(c2);
     (D.body || root).appendChild(f); var ok = f.scrollHeight === 3; f.parentNode.removeChild(f); return ok;
   }
   function aspectOk() {
@@ -96,6 +98,7 @@
 
   --r-sm: 8px; --r: 12px; --r-lg: 16px;
   --maxw: 1180px;
+  --gut: 14px; /* 统一“到边框”和“卡片间”的间距，避免忽宽忽窄 */
   --ease: cubic-bezier(.22, .61, .36, 1);
   --display: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Source Han Sans SC", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "SFMono-Regular", "JetBrains Mono", "Roboto Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
@@ -113,7 +116,7 @@ html.fm-native .app { background: linear-gradient(180deg, rgba(7,8,11,.55), rgba
 /* 顶部暖金氛围光（低成本，TV 关闭） */
 .app::before { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: auto; height: 360px; pointer-events: none; z-index: 0; background: radial-gradient(130% 100% at 50% -12%, rgba(231,185,85,.12), rgba(231,185,85,0) 62%); }
 .tv-mode .app::before { display: none; }
-.wrap { position: relative; z-index: 1; width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 18px; }
+.wrap { position: relative; z-index: 1; width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gut); }
 
 /* ---------------- 顶栏 ---------------- */
 .topbar { position: sticky; top: 0; z-index: 20; padding-top: calc(var(--safe-top) + 12px); padding-bottom: 12px; background: linear-gradient(to bottom, rgba(6,7,9,.95), rgba(6,7,9,.6) 72%, rgba(6,7,9,0)); backdrop-filter: blur(10px); }
@@ -150,11 +153,30 @@ html.fm-native .app { background: linear-gradient(180deg, rgba(7,8,11,.55), rgba
 .section-head h2 { position: relative; margin: 0; padding-left: 12px; font-size: 18px; font-weight: 800; letter-spacing: .3px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
 .section-head h2::before { content: ""; position: absolute; left: 0; top: 3px; bottom: 3px; width: 4px; border-radius: 3px; background: linear-gradient(to bottom, #ffd874, var(--gold-deep)); }
 
-/* ---------------- 海报网格 ---------------- */
+/* ---------------- 海报网格 ----------------
+   直接照搬 emby 文档的方案：窄屏固定 3 列；≥720px 起换成 auto-fill + minmax，
+   按目标卡宽（132px/156px）自动算列数，列数随宽度平滑变化，
+   横屏只是"宽度变大"，会被同一套规则自动接住，不需要再单独写 orientation 断点 */
 .grid { display: block; }
-@supports (display: grid) { .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 12px; } }
-.no-layout-gap .grid { display: block; font-size: 0; }
-.no-layout-gap .grid > .card { display: inline-block; vertical-align: top; width: 32%; margin: 0 1.3% 16px 0; font-size: 15px; }
+@supports (display: grid) {
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gut); }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
+  }
+  @media (min-width: 1180px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(156px, 1fr)); }
+  }
+}
+/* 无 flex/grid gap 支持时的兜底（极少数老内核才会触发）：固定 3 列 */
+.no-layout-gap .grid { display: flex; flex-wrap: wrap; gap: 0; margin: 0 calc(var(--gut) / -2); font-size: 0; }
+.no-layout-gap .grid > .card { display: block; width: calc(33.3% - var(--gut)); margin: 0 calc(var(--gut) / 2) var(--gut); font-size: 15px; }
+
+/* 分类切换动效：内容按方向滑入 + 淡入（fwd 从右进，back 从左进） */
+@keyframes gridSwapFwd { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes gridSwapBack { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+.grid.gswap-fwd { animation: gridSwapFwd .34s var(--ease); }
+.grid.gswap-back { animation: gridSwapBack .34s var(--ease); }
+.tv-mode .grid.gswap-fwd, .tv-mode .grid.gswap-back { animation: none; }
 
 .card { position: relative; text-align: left; padding: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; transition: transform .16s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
 .card:active { transform: scale(.975); }
@@ -169,6 +191,8 @@ html.fm-native .app { background: linear-gradient(180deg, rgba(7,8,11,.55), rgba
 .qtag.qbd { background: linear-gradient(95deg, #ffd874, var(--gold)); }
 .qtag.qweb { background: #aab6c4; color: #14161c; }
 .remark { position: absolute; z-index: 2; right: 7px; bottom: 7px; font-size: 10.5px; font-weight: 700; color: #fff; background: rgba(6,7,9,.7); border: 1px solid rgba(255,255,255,.12); padding: 2px 7px; border-radius: 6px; }
+/* 年份角标：海报左下角，紧凑显示，使下方只保留片名一行 */
+.yeartag { position: absolute; z-index: 2; left: 7px; bottom: 7px; font-size: 10.5px; font-weight: 700; color: #fff; background: rgba(6,7,9,.66); border: 1px solid rgba(255,255,255,.12); padding: 2px 7px; border-radius: 6px; }
 .card .meta { padding: 7px 9px 9px; }
 .card .meta .t { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 18px; height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color .2s; }
 .card .meta .sub { display: flex; align-items: center; gap: 6px; margin-top: 5px; height: 17px; white-space: nowrap; overflow: hidden; }
@@ -186,7 +210,8 @@ html.fm-native .app { background: linear-gradient(180deg, rgba(7,8,11,.55), rgba
 @media (max-width: 520px) { .brand .slogan { display: none; } }
 
 /* ---------------- 筛选器 ---------------- */
-.filters { margin: 4px 0 14px; }
+.filters { margin: 4px 0 14px; overflow: hidden; }
+.filters.collapsed { display: none; }
 .filterrow { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .filterrow::-webkit-scrollbar { display: none; }
 .no-layout-gap .filterrow > * { margin-right: 8px; }
@@ -199,6 +224,17 @@ html.fm-native .app { background: linear-gradient(180deg, rgba(7,8,11,.55), rgba
 .ftools .res { font-size: 12px; color: var(--ink-faint); }
 .fclear { font-size: 12px; color: var(--ink-soft); background: transparent; border: 1px solid var(--line); border-radius: 999px; height: 28px; padding: 0 14px; }
 .fclear:focus { outline: 0; } .fclear.focus { box-shadow: 0 0 0 2px var(--gold); }
+
+/* 筛选 收起/展开 按钮（放在区块标题右侧，不占用额外整行高度） */
+.ftoggle { flex: 0 0 auto; display: flex; align-items: center; gap: 5px; height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-soft); color: var(--ink-soft); font-size: 13px; font-weight: 700; transition: color .2s, background .2s, border-color .2s, box-shadow .2s; }
+.no-layout-gap .ftoggle > * { margin-right: 5px; }
+.ftoggle-count { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--gold); color: #2a1c00; font-size: 10.5px; font-weight: 900; }
+.ftoggle-count.hidden { display: none; }
+.ftoggle-chev { width: 14px; height: 14px; flex: 0 0 auto; fill: currentColor; transition: transform .2s var(--ease); transform: rotate(-90deg); }
+.ftoggle.open .ftoggle-chev { transform: rotate(0deg); }
+.ftoggle:focus { outline: 0; } .ftoggle.focus { box-shadow: 0 0 0 2px var(--gold); }
+
+
 
 /* 画质角标（Pomo 用语：4K / Dolby / HDR / Web） */
 .qtag.tDolby { background: linear-gradient(95deg, #ffe08a, #ff9d4d); color: #2a1c00; }
@@ -271,6 +307,12 @@ html.fm-native .sheet { background: #0b0c0f; }
 .metarow:last-child { border-bottom: 0; }
 .metarow .k { flex: 0 0 62px; color: var(--ink-faint); font-weight: 600; }
 .metarow .v { flex: 1 1 auto; min-width: 0; color: var(--ink-soft); line-height: 1.55; }
+/* 元数据标签：与评分一样的圆角 pill，平铺成行，精简显示 */
+.metatags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 6px; }
+.no-layout-gap .metatags > * { margin: 0 8px 8px 0; }
+.mtag { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); background: var(--panel-soft); border: 1px solid var(--line); padding: 5px 12px; border-radius: 999px; white-space: nowrap; line-height: 1.2; }
+.mtag .ml { color: var(--ink-faint); font-weight: 700; margin-right: 5px; }
+.mtag.key { color: var(--gold); background: var(--gold-soft); border-color: rgba(231,185,85,.32); }
 
 .blk-title { position: relative; padding-left: 12px; font-size: 16px; font-weight: 800; margin: 24px 0 12px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
 .blk-title::before { content: ""; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; border-radius: 3px; background: linear-gradient(to bottom, #ffd874, var(--gold-deep)); }
@@ -294,6 +336,28 @@ html.fm-native .sheet { background: #0b0c0f; }
 .gtag.1080P { background: var(--slate); color: #14161c; }
 .gtag.其它 { background: #6f6a5e; color: #fff; }
 .resgroup .gh .cnt { color: var(--ink-faint); font-weight: 600; font-size: 12px; }
+
+/* 资源画质类别：并排标签（原盘 / 4K / 中字4K…），点选切换下方框内容 */
+.restabs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.restabs::-webkit-scrollbar { display: none; }
+.no-layout-gap .restabs > * { margin-right: 8px; }
+.restab { flex: 0 0 auto; display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-soft); color: var(--ink-soft); font-size: 13px; font-weight: 800; letter-spacing: .3px; white-space: nowrap; transition: color .2s, background .2s, border-color .2s, box-shadow .2s; }
+.no-layout-gap .restab > * { margin-right: 7px; }
+.restab .rt-cnt { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 17px; padding: 0 5px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--ink-faint); font-size: 11px; font-weight: 800; }
+.restab:focus { outline: 0; }
+.restab.focus { box-shadow: 0 0 0 2px var(--gold); }
+/* 选中态：用各画质代表色，呼应卡片角标 */
+.restab.on { border-color: transparent; }
+.restab.on .rt-cnt { background: rgba(0,0,0,.18); }
+.restab.on[data-tier="原盘"] { background: linear-gradient(95deg, #ffe08a, var(--gold)); color: #2a1c00; }
+.restab.on[data-tier="原盘"] .rt-cnt { color: rgba(42,28,0,.7); }
+.restab.on[data-tier="4K"], .restab.on[data-tier="中字4K"] { background: linear-gradient(95deg, #8bd9ff, var(--cyan)); color: #04121f; }
+.restab.on[data-tier="4K"] .rt-cnt, .restab.on[data-tier="中字4K"] .rt-cnt { color: rgba(4,18,31,.72); }
+.restab.on[data-tier="1080P"] { background: var(--slate); color: #14161c; }
+.restab.on[data-tier="1080P"] .rt-cnt { color: rgba(20,22,28,.65); }
+.restab.on[data-tier="720P"], .restab.on[data-tier="其它"] { background: #6f6a5e; color: #fff; }
+.restab.on[data-tier="720P"] .rt-cnt, .restab.on[data-tier="其它"] .rt-cnt { background: rgba(255,255,255,.2); color: #fff; }
+.resbox { display: block; }
 
 .resitem { display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 9px 13px; margin-bottom: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); transition: box-shadow .2s, border-color .2s, background .2s; }
 .no-layout-gap .resitem > * { margin-right: 12px; }
@@ -332,20 +396,12 @@ html.fm-native .sheet { background: #0b0c0f; }
 .tv-mode .brand b { font-size: 26px; }
 .tv-mode .section-head h2 { font-size: 23px; }
 @supports (display: grid) { .tv-mode .grid { grid-template-columns: repeat(6, 1fr); } }
-.tv-mode.no-layout-gap .grid > .card { width: 15.2%; }
+.tv-mode.no-layout-gap .grid > .card { width: calc(16.6% - var(--gut)); }
 .tv-mode .card .meta .t { font-size: 18px; }
 .tv-mode .searchbox input { font-size: 18px; }
 /* TV 关闭动效，优先稳定帧率 */
 .tv-mode .card, .tv-mode .actbtn, .tv-mode .op, .tv-mode .navtab, .tv-mode .skel, .tv-mode .iconbtn { transition: none; animation: none; }
 .tv-mode .card.focus { transform: none; }
-
-/* 窄屏 / 平板 / 宽屏 */
-@media (max-width: 380px) {
-  @supports (display: grid) { .grid { grid-template-columns: repeat(2, 1fr); } }
-  .no-layout-gap .grid > .card { width: 48%; }
-}
-@media (min-width: 560px) and (max-width: 900px) { @supports (display: grid) { .grid { grid-template-columns: repeat(4, 1fr); } } }
-@media (min-width: 901px) { @supports (display: grid) { html:not(.tv-mode) .grid { grid-template-columns: repeat(6, 1fr); } } }
 
 /* 降级：去掉 calc 之外不需要的；no-css-functions 不影响本表（未用 clamp/min/max） */
 .no-css-functions .app { padding-left: 0; padding-right: 0; }
@@ -383,7 +439,13 @@ html.fm-native .sheet { background: #0b0c0f; }
     <nav class="nav" id="nav"></nav>
 
     <section>
-      <div class="section-head"><h2 id="listTitle">All 4K Movies</h2></div>
+      <div class="section-head">
+        <h2 id="listTitle">All 4K Movies</h2>
+        <button class="ftoggle focusable" id="ftoggle" data-fk="ftoggle" aria-label="展开或收起筛选">
+          <span>筛选</span><span class="ftoggle-count hidden" id="ftoggleCount"></span>
+          <svg class="ftoggle-chev" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </button>
+      </div>
       <div class="filters" id="filters"></div>
       <div class="grid" id="grid"></div>
       <div id="listState"></div>
@@ -451,7 +513,10 @@ var CONFIG = {
   /* 可选：Pomo 风格目录 JSON 接口。留空用内置演示数据，首屏仍可渲染。
      约定：?cat=分类key  ->  { list:[ {id,title,en,year,genre,country,director,cast,imdb,quality,remark,poster,backdrop,desc,stills:[],resources:[{tier,name,size,url,type,password}]} ] } */
   catalogApi: "",
-  tmdb: { apiKey: "d7040155454e7fdf547c4d889ebbcca7", lang: "zh-CN", imageBase: "https://image.tmdb.org/t/p/", listSize: "w342", heroSize: "w780", stillSize: "w500" },
+  /* 接口走 api.tmdb.org（同 nostr-emby 文档方案）：国内大部分地区不需要代理即可直连，
+     比经典域名 api.themoviedb.org 稳定得多（后者常被污染）。图片走 image.tmdb.org，同样直连不经代理；
+     尺寸分级参考 emby：网格小图按角色封顶到较高档位，主视觉图给最高档位 */
+  tmdb: { apiKey: "d7040155454e7fdf547c4d889ebbcca7", lang: "zh-CN", apiBase: "https://api.tmdb.org/3", imageBase: "https://image.tmdb.org/t/p/", listSize: "w780", heroSize: "original", stillSize: "w1280" },
   imageHeaders: {},
   pansou: { apiBase: "https://so.252035.xyz", diskTypes: ["quark","aliyun","baidu","uc","tianyi","xunlei","123","115","mobile"] }
 };
@@ -460,16 +525,24 @@ var DISK_LABEL = { quark:"夸克", aliyun:"阿里", baidu:"百度", uc:"UC", tia
 
 var COUNTRY = { US:"美国", CN:"中国大陆", HK:"中国香港", TW:"中国台湾", JP:"日本", KR:"韩国", GB:"英国", FR:"法国", DE:"德国", IT:"意大利", ES:"西班牙", IN:"印度", TH:"泰国", RU:"俄罗斯", CA:"加拿大", AU:"澳大利亚", SE:"瑞典", DK:"丹麦", NO:"挪威", BR:"巴西", IE:"爱尔兰", NZ:"新西兰", BE:"比利时", NL:"荷兰", MX:"墨西哥" };
 
+/* 分类即查询定义：name 显示名，其余字段驱动 TMDB discover
+   tv:剧集  lang:原始语言  country:制片国家  genres:类型(多类型取并集 OR)
+   sort:"vote" 走高分排序  minVotes/maxVotes:票数门槛  yearLte:年代上限
+   注：单一类型/地区/剧种已由「类型/地区」筛选覆盖，导航不再重复，
+   只保留筛选选不出来的精选合集（高分/冷门/老片/华语）与冷门类型（战争/西部/音乐/纪录）及剧集入口 */
 var CATS = [
-  { key:"new", name:"最新收录" },
-  { key:"huayu", name:"华语热门" },
-  { key:"jiating", name:"家庭影院" },
-  { key:"donghua", name:"动画大电影" },
-  { key:"lengmen", name:"冷门佳片" },
-  { key:"top250", name:"TOP250" },
-  { key:"blu", name:"蓝光原盘" },
-  { key:"ju", name:"剧集" }
+  { key:"new",       name:"最新热门",   recent:true },
+  { key:"huayu",     name:"华语佳作",   lang:"zh" },
+  { key:"top250",    name:"高分经典",   sort:"vote", minVotes:3000 },
+  { key:"jingdian",  name:"殿堂老片",   sort:"vote", minVotes:1500, yearLte:"2010-12-31" },
+  { key:"lengmen",   name:"冷门佳片",   sort:"vote", minVotes:80, maxVotes:1200 },
+  { key:"zhanzheng", name:"战争史诗",   genres:[10752,36] },
+  { key:"xibu",      name:"西部片",     genres:[37] },
+  { key:"yinyue",    name:"音乐歌舞",   genres:[10402] },
+  { key:"jilu",      name:"纪录片",     genres:[99] },
+  { key:"ju",        name:"热门剧集",   tv:true }
 ];
+function catDef(key) { for (var i = 0; i < CATS.length; i++) if (CATS[i].key === key) return CATS[i]; return {}; }
 
 var IS_NATIVE = !!(window.fongmiBridge || window.fm || window.fongmi);
 var CLIENT = window.fongmiClient || {};
@@ -522,10 +595,34 @@ function request(url, options) {
       .then(parseJSONLoose);
   });
 }
-function resUrl(url, headers) {
-  if (!url) return "";
-  if (window.fm && window.fm.res) { try { return window.fm.res(url, headers ? { headers: headers } : {}); } catch (e) { return url; } }
+/* 直连加载（参考 nostr-emby）：图片不走 fm.res/代理，直接 img.src；
+   失败时在 images.tmdb.org ↔ image.tmdb.org 之间换一次域名再重试 */
+function altHost(url) {
+  if (!url) return url;
+  if (url.indexOf("://images.tmdb.org") !== -1) return url.replace("://images.tmdb.org", "://image.tmdb.org");
+  if (url.indexOf("://image.tmdb.org") !== -1) return url.replace("://image.tmdb.org", "://images.tmdb.org");
   return url;
+}
+/* 兼容旧调用：直连返回原图地址 */
+function resUrl(url) { return url || ""; }
+function makeImg(url, altText) {
+  var img = el("img"); img.decoding = "async"; img.alt = altText || "";
+  img.loading = IS_TV ? "eager" : "lazy";   /* TV WebView 不支持 lazy，用 eager */
+  var tried = false;
+  img.onerror = function () { if (!tried && url) { tried = true; this.src = altHost(url); return; } this.style.display = "none"; };
+  img.src = url;
+  return img;
+}
+function setHeroBg(url) {
+  var bgEl = $("#heroBg"); if (!bgEl) return;
+  if (!url) { bgEl.style.backgroundImage = "linear-gradient(135deg,#2a2a33,#101015)"; bgEl.classList.remove("portrait"); return; }
+  bgEl.style.backgroundImage = "url('" + url + "')";
+  bgEl.classList.toggle("portrait", isPortrait());
+  if (!IS_TV) {   /* TV 端跳过 new Image() 预探测（部分 WebView 处理异常） */
+    var probe = new Image();
+    probe.onerror = function () { bgEl.style.backgroundImage = "url('" + altHost(url) + "')"; };
+    probe.src = url;
+  }
 }
 
 /* TMDB 图片换尺寸（如 w342 -> w780），非 TMDB URL 原样返回 */
@@ -538,14 +635,12 @@ function isPortrait() {
 /* 沉浸大图：竖屏用竖版海报（升清 w780），横屏用横版剧照；缺图互相回退 */
 function heroImageUrl(item) {
   var poster = pick(item, "poster", ""), backdrop = pick(item, "backdrop", "");
-  var bigP = poster ? tmdbResize(poster, "w780") : "";
+  var bigP = poster ? tmdbResize(poster, "original") : "";
   return isPortrait() ? (bigP || backdrop || "") : (backdrop || bigP || "");
 }
 function applyHeroImage(item) {
-  var bgEl = $("#heroBg"); if (!bgEl || !item) return;
-  var u = heroImageUrl(item);
-  if (u) { bgEl.style.backgroundImage = "url('" + resUrl(u, CONFIG.imageHeaders) + "')"; bgEl.classList.toggle("portrait", isPortrait()); }
-  else { bgEl.style.backgroundImage = "linear-gradient(135deg,#2a2a33,#101015)"; }
+  if (!item) return;
+  setHeroBg(heroImageUrl(item));
 }
 
 function $(sel, root) { return (root || document).querySelector(sel); }
@@ -572,10 +667,7 @@ function fallbackCopy(text) {
 function hueOf(s) { var h = 0, i; s = s || ""; for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360; return h; }
 function posterInner(item) {
   var poster = pick(item, "poster", "");
-  if (poster) {
-    var img = el("img"); img.loading = "lazy"; img.decoding = "async"; img.alt = pick(item, "title", "");
-    img.src = resUrl(poster, CONFIG.imageHeaders); img.onerror = function () { this.style.display = "none"; }; return img;
-  }
+  if (poster) return makeImg(poster, pick(item, "title", ""));
   var h = hueOf(pick(item, "title", "")); var ph = el("div", "ph"); ph.setAttribute("data-ph", "1");
   ph.style.background = "linear-gradient(150deg, hsl(" + h + ",18%,28%), hsl(" + ((h + 30) % 360) + ",16%,14%))";
   ph.textContent = pick(item, "title", "影片"); return ph;
@@ -597,7 +689,7 @@ function getArtwork(item) {
     if (cached) { try { var o = JSON.parse(cached); if (o && o.poster) return o; } catch (e) {} }
     var t = CONFIG.tmdb;
     var q = pick(item, "en", "") || pick(item, "title", "");
-    var url = "https://api.themoviedb.org/3/search/multi?api_key=" + encodeURIComponent(t.apiKey) +
+    var url = (t.apiBase || "https://api.tmdb.org/3") + "/search/multi?api_key=" + encodeURIComponent(t.apiKey) +
       "&language=" + encodeURIComponent(t.lang || "zh-CN") + "&query=" + encodeURIComponent(q);
     return request(url, { timeout: 15 }).then(function (data) {
       var arr = (data && data.results) ? data.results : [];
@@ -615,7 +707,7 @@ function getArtwork(item) {
 function getStills(art) {
   if (!tmdbEnabled() || !art || !art.id) return Promise.resolve([]);
   var t = CONFIG.tmdb, type = art.type === "tv" ? "tv" : "movie";
-  var url = "https://api.themoviedb.org/3/" + type + "/" + art.id + "/images?api_key=" + encodeURIComponent(t.apiKey);
+  var url = (t.apiBase || "https://api.tmdb.org/3") + "/" + type + "/" + art.id + "/images?api_key=" + encodeURIComponent(t.apiKey);
   return request(url, { timeout: 15 }).then(function (data) {
     var arr = (data && data.backdrops) ? data.backdrops : [];
     return arr.slice(0, 8).map(function (b) { return t.imageBase + (t.stillSize || "w500") + b.file_path; });
@@ -628,7 +720,7 @@ function getDetailMeta(art) {
   var ck = "meta_" + type + "_" + art.id;
   return Store.get(ck).then(function (cached) {
     if (cached) { try { var o = JSON.parse(cached); if (o) return o; } catch (e) {} }
-    var url = "https://api.themoviedb.org/3/" + type + "/" + art.id + "?api_key=" + encodeURIComponent(t.apiKey) +
+    var url = (t.apiBase || "https://api.tmdb.org/3") + "/" + type + "/" + art.id + "?api_key=" + encodeURIComponent(t.apiKey) +
       "&language=" + encodeURIComponent(t.lang || "zh-CN") + "&append_to_response=credits,alternative_titles";
     return request(url, { timeout: 15 }).then(function (d) {
       if (!d) return null;
@@ -665,8 +757,7 @@ function patchCardPoster(item, art) {
   item.poster = art.poster; if (art.backdrop) item.backdrop = art.backdrop;
   var card = $("#grid .card[data-id=\"" + cssEsc(pick(item, "id", "")) + "\"]"); if (!card) return;
   var poster = card.querySelector(".poster"); var ph = poster ? poster.querySelector("[data-ph]") : null;
-  if (poster && ph) { var img = el("img"); img.loading = "lazy"; img.decoding = "async"; img.alt = pick(item, "title", "");
-    img.src = resUrl(art.poster, CONFIG.imageHeaders); img.onerror = function () { this.style.display = "none"; }; poster.replaceChild(img, ph); }
+  if (poster && ph) { poster.replaceChild(makeImg(art.poster, pick(item, "title", "")), ph); }
 }
 function enrichPosters(items) {
   if (!tmdbEnabled()) return;
@@ -755,7 +846,7 @@ var DEMO = [
 
 var STATE = { cat: "new", full: [], list: [], reqToken: 0, detail: null, driveCheck: true, favs: [], clientFilter: true,
   page: 1, totalPages: 1, hasMore: false, loadingMore: false,
-  filters: { genre: "全部", region: "全部", year: "全部", sort: "最新" },
+  filters: { genre: "全部", region: "全部", year: "全部", sort: "最新" }, filtersOpen: false,
   featured: [], heroIdx: 0, heroTimer: null, playQueue: [], playIdx: 0, expand: {} };
 
 var FILTERS = {
@@ -792,23 +883,47 @@ function mapTmdb(r, isTV) {
   };
 }
 function tmdbPage(cat, f, page) {
-  var t = CONFIG.tmdb, isTV = (cat === "ju");
-  var base = "https://api.themoviedb.org/3/discover/" + (isTV ? "tv" : "movie");
+  var t = CONFIG.tmdb, def = catDef(cat), isTV = !!def.tv;
+  var base = (t.apiBase || "https://api.tmdb.org/3") + "/discover/" + (isTV ? "tv" : "movie");
   var p = ["api_key=" + encodeURIComponent(t.apiKey), "language=" + encodeURIComponent(t.lang || "zh-CN"), "include_adult=false", "page=" + (page || 1)];
-  var sort = (f.sort === "评分") ? "vote_average.desc" : "popularity.desc";
+  var lteField = isTV ? "first_air_date.lte" : "primary_release_date.lte";
+  var gteField = isTV ? "first_air_date.gte" : "primary_release_date.gte";
+
+  var sort = (def.sort === "vote" || f.sort === "评分") ? "vote_average.desc" : "popularity.desc";
+
+  /* 类型：用户手选优先（窄化为单一类型），否则用分类自带类型，多类型取并集 OR */
   var genres = [];
-  if (cat === "huayu") p.push("with_original_language=zh");
-  else if (cat === "jiating") genres.push(10751);
-  else if (cat === "donghua") genres.push(16);
-  else if (cat === "top250") { sort = "vote_average.desc"; p.push("vote_count.gte=3000"); }
-  else if (cat === "lengmen") { sort = "vote_average.desc"; p.push("vote_count.gte=80"); p.push("vote_count.lte=1200"); }
-  if (f.genre !== "全部" && TMDB_GENRE[f.genre]) genres.push(TMDB_GENRE[f.genre]);
-  if (genres.length) p.push("with_genres=" + genres.join(","));
-  if (f.region !== "全部" && REGION_CC[f.region]) p.push("with_origin_country=" + REGION_CC[f.region]);
-  if (f.year !== "全部") {
-    if (f.year === "更早") p.push((isTV ? "first_air_date.lte" : "primary_release_date.lte") + "=2019-12-31");
+  if (f.genre !== "全部" && TMDB_GENRE[f.genre]) genres = [TMDB_GENRE[f.genre]];
+  else if (def.genres && def.genres.length) genres = def.genres.slice();
+  if (genres.length) p.push("with_genres=" + genres.join("|"));
+
+  /* 地区：用户手选优先，否则分类自带制片国家 */
+  var cc = (f.region !== "全部" && REGION_CC[f.region]) ? REGION_CC[f.region] : (def.country || "");
+  if (cc) p.push("with_origin_country=" + cc);
+  /* 原始语言（华语等）；用户已选地区时让地区优先 */
+  if (def.lang && f.region === "全部") p.push("with_original_language=" + def.lang);
+
+  /* 票数门槛 / 年代上限 */
+  if (def.minVotes) p.push("vote_count.gte=" + def.minVotes);
+  if (def.maxVotes) p.push("vote_count.lte=" + def.maxVotes);
+  if (def.yearLte) p.push(lteField + "=" + def.yearLte);
+
+  /* 用户选择年份 */
+  var userYear = (f.year && f.year !== "全部");
+  if (userYear) {
+    if (f.year === "更早") p.push(lteField + "=2019-12-31");
     else p.push((isTV ? "first_air_date_year" : "primary_release_year") + "=" + f.year);
   }
+
+  /* 近两年偏好：仅“最新热门”启用，且未手选年份时；
+     其余分类（地区/类型等）按热度全量拉取，总页数多，能一直加载更多 */
+  var biasRecent = (def.recent && sort === "popularity.desc" && !userYear);
+  if (biasRecent) {
+    var today = new Date(), past = new Date(today.getTime() - 730 * 86400000);
+    p.push(lteField + "=" + today.toISOString().slice(0, 10));
+    p.push(gteField + "=" + past.toISOString().slice(0, 10));
+  }
+  if (sort === "popularity.desc" && p.join("&").indexOf("vote_count.gte") === -1) p.push("vote_count.gte=" + (biasRecent ? 20 : 10));
   if (sort === "vote_average.desc" && p.join("&").indexOf("vote_count.gte") === -1) p.push("vote_count.gte=200");
   p.push("sort_by=" + sort);
   return request(base + "?" + p.join("&"), { timeout: 18 }).then(function (d) {
@@ -822,8 +937,25 @@ function dedupeById(list) {
   (list || []).forEach(function (m) { var id = pick(m, "id", ""); if (id && seen[id]) return; if (id) seen[id] = 1; out.push(m); });
   return out;
 }
+/* 从 fromPage 起顺序拉 count 页（容错：某页失败就停在已拿到的），
+   过程中持续更新 STATE.page / totalPages / hasMore */
+function tmdbPages(cat, f, fromPage, count) {
+  var acc = [];
+  function step(pn, left) {
+    if (left <= 0) return Promise.resolve();
+    return tmdbPage(cat, f, pn).then(function (r) {
+      acc = acc.concat(r.items);
+      STATE.totalPages = r.total || STATE.totalPages || 1;
+      STATE.page = pn;
+      STATE.hasMore = (pn < STATE.totalPages);
+      if (!STATE.hasMore) return;
+      return step(pn + 1, left - 1);
+    }, function () { STATE.hasMore = ((pn - 1) < (STATE.totalPages || 1)); });
+  }
+  return step(fromPage, count).then(function () { return acc; });
+}
 function loadCatalog(cat) {
-  STATE.page = 1; STATE.hasMore = false; STATE.loadingMore = false;
+  STATE.page = 1; STATE.totalPages = 1; STATE.hasMore = false; STATE.loadingMore = false;
   if (CONFIG.catalogApi) {
     STATE.clientFilter = true;
     var url = CONFIG.catalogApi + (CONFIG.catalogApi.indexOf("?") !== -1 ? "&" : "?") + "cat=" + encodeURIComponent(cat);
@@ -831,32 +963,26 @@ function loadCatalog(cat) {
   }
   if (tmdbEnabled()) {
     STATE.clientFilter = false;
-    return tmdbPage(cat, STATE.filters, 1).then(function (r1) {
-      STATE.totalPages = r1.total;
-      if (r1.total > 1) {
-        return tmdbPage(cat, STATE.filters, 2).then(function (r2) {
-          STATE.page = 2; STATE.hasMore = (2 < r1.total);
-          return dedupeById(r1.items.concat(r2.items));
-        }, function () { STATE.hasMore = (1 < r1.total); return r1.items; });
-      }
-      STATE.hasMore = false; return r1.items;
+    /* 首屏直接拉 3 页 ≈ 60 部，量大一点；剩下的滚动到底自动续 */
+    return tmdbPages(cat, STATE.filters, 1, 3).then(function (items) {
+      if (!items.length) { STATE.clientFilter = true; STATE.hasMore = false; return demoFor(cat); }
+      return dedupeById(items);
     }).catch(function () { STATE.clientFilter = true; STATE.hasMore = false; return demoFor(cat); });
   }
   STATE.clientFilter = true;
   return Promise.resolve(demoFor(cat));
 }
-/* 加载更多（仅 TMDB 分页） */
+/* 加载更多（仅 TMDB 分页）：一次续 2 页，攒得更快 */
 function loadMore() {
   if (STATE.clientFilter || !STATE.hasMore || STATE.loadingMore) return;
   STATE.loadingMore = true;
   var b = $("#listState .loadmore"); if (b) { b.textContent = "加载中…"; }
-  var next = (STATE.page || 1) + 1, token = STATE.reqToken;
-  tmdbPage(STATE.cat, STATE.filters, next).then(function (r) {
+  var token = STATE.reqToken, from = (STATE.page || 1) + 1;
+  tmdbPages(STATE.cat, STATE.filters, from, 2).then(function (items) {
     if (token !== STATE.reqToken) return;
-    STATE.page = next; STATE.hasMore = (next < (STATE.totalPages || r.total));
-    STATE.full = dedupeById((STATE.full || []).concat(r.items));
-    STATE.loadingMore = false; renderList();
-  }).catch(function () { STATE.loadingMore = false; STATE.hasMore = false; renderList(); });
+    STATE.full = dedupeById((STATE.full || []).concat(items));
+    STATE.loadingMore = false; renderList(token);
+  }).catch(function () { if (token !== STATE.reqToken) return; STATE.loadingMore = false; STATE.hasMore = false; renderList(token); });
 }
 
 /* ============================================================
@@ -875,7 +1001,49 @@ function renderNav() {
   var c = CATS.filter(function (x) { return x.key === STATE.cat; })[0];
   $("#listTitle").textContent = (STATE.cat === "new") ? "All 4K Movies" : (c ? c.name : "All 4K Movies");
 }
-function setCat(k) { if (STATE.cat === k) return; STATE.cat = k; renderNav(); renderGrid(); Store.set("cat", k); }
+function setCat(k) {
+  if (STATE.cat === k) return;
+  var from = catIndex();
+  STATE.cat = k;
+  /* 切换方向：往后(下一个)内容从右侧滑入，往前从左侧滑入 */
+  STATE.swapDir = (catIndex() > from) ? "fwd" : "back";
+  /* 切换分类后筛选自动重置刷新 */
+  STATE.filters = { genre: "全部", region: "全部", year: "全部", sort: "最新" };
+  syncFilterPills();
+  renderNav(); renderGrid(); scrollNavToActive(); Store.set("cat", k);
+}
+/* 当前分类在 CATS 中的序号 */
+function catIndex() { for (var i = 0; i < CATS.length; i++) if (CATS[i].key === STATE.cat) return i; return 0; }
+/* 把激活的分类标签滚到可见居中位置（滑动切换后用得上） */
+function scrollNavToActive() {
+  var nav = $("#nav"); if (!nav) return;
+  var on = nav.querySelector(".navtab.on"); if (!on) return;
+  try { on.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {}
+}
+/* 网格切换动效：按方向滑入 + 淡入；可重复触发（先移除类、强制回流再加回）
+   TV 端与“减少动态效果”下跳过，只换数据不做动画 */
+function prefersReduceMotion() {
+  if (!window.matchMedia) return false;
+  try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+}
+function playGridEnter() {
+  if (!STATE.swapDir) return;
+  if (IS_TV || prefersReduceMotion()) return;
+  var grid = $("#grid"); if (!grid) return;
+  var cls = STATE.swapDir === "back" ? "gswap-back" : "gswap-fwd";
+  grid.classList.remove("gswap-fwd", "gswap-back");
+  void grid.offsetWidth;            /* 强制回流，确保动画从头播放 */
+  grid.classList.add(cls);
+}
+/* 按方向切换到相邻分类：delta=+1 下一个，-1 上一个；到边界不动 */
+function switchCatBy(delta) {
+  var i = catIndex() + delta;
+  if (i < 0 || i >= CATS.length) return false;
+  var c = CATS[i];
+  setCat(c.key);
+  toast(c.name);
+  return true;
+}
 
 function deriveTag(item) {
   var q = (pick(item, "quality", "") + " " + pick(item, "remark", "")).toUpperCase();
@@ -889,21 +1057,20 @@ function buildCard(item) {
   var card = el("button", "card focusable");
   card.setAttribute("data-fk", "card-" + pick(item, "id", Math.random())); card.setAttribute("data-id", pick(item, "id", ""));
   var poster = el("div", "poster"); poster.appendChild(posterInner(item));
+  /* 左上角标：有画质标画质，否则标评分（只在这一处显示，避免重复） */
   if (pick(item, "quality", "")) {
     var tg = deriveTag(item); var qt = el("span", "qtag " + tg.c); qt.textContent = tg.t; poster.appendChild(qt);
     var rmk = pick(item, "remark", ""); if (rmk && rmk !== tg.t) { var rm = el("span", "remark"); rm.textContent = rmk; poster.appendChild(rm); }
-  } else if (num(item.rating) > 0) {
-    var st = el("span", "qtag tStar"); st.textContent = "★ " + item.rating; poster.appendChild(st);
+  } else {
+    var sc = num(item.rating) || num(item.imdb) || num(item.douban);
+    if (sc > 0) { var st = el("span", "qtag tStar"); st.textContent = "★ " + sc; poster.appendChild(st); }
   }
+  /* 左下角标：年份（挪到海报上，让下方只留一行片名，卡片更紧凑） */
+  if (pick(item, "year", "")) { var yb = el("span", "yeartag"); yb.textContent = item.year; poster.appendChild(yb); }
   card.appendChild(poster);
   var meta = el("div", "meta");
   var t = el("div", "t"); t.textContent = pick(item, "title", ""); meta.appendChild(t);
-  var sub = el("div", "sub");
-  if (pick(item, "year", "")) { var yr = el("span", "yr"); yr.textContent = item.year; sub.appendChild(yr); }
-  if (num(item.rating) > 0) { var rt = el("span", "rate st"); rt.textContent = "★ " + item.rating; sub.appendChild(rt); }
-  else if (num(item.imdb) > 0) { var im = el("span", "rate im"); im.textContent = "IMDb " + item.imdb; sub.appendChild(im); }
-  else if (num(item.douban) > 0) { var db = el("span", "rate db"); db.textContent = "豆 " + item.douban; sub.appendChild(db); }
-  meta.appendChild(sub); card.appendChild(meta);
+  card.appendChild(meta);
   card.onclick = function () { openDetail(item); };
   return card;
 }
@@ -915,10 +1082,12 @@ function stateNode(title, sub, retry) {
 }
 function renderGrid() {
   var grid = $("#grid"), st = $("#listState"), token = ++STATE.reqToken;
-  if (!grid.children.length) {
+  /* 切换分类时立即清空换骨架（即时反馈），否则仅在空时铺骨架 */
+  if (!grid.children.length || STATE.swapDir) {
     var f0 = document.createDocumentFragment();
     for (var i = 0; i < 6; i++) { var c = el("div", "card"); c.appendChild(el("div", "skel poster-skel")); f0.appendChild(c); }
     grid.replaceChildren(f0);
+    playGridEnter();
   }
   st.replaceChildren();
   loadCatalog(STATE.cat).then(function (list) {
@@ -935,11 +1104,13 @@ function renderList(token) {
   var grid = $("#grid"), st = $("#listState");
   STATE.list = STATE.clientFilter ? applyFilters(STATE.full) : (STATE.full || []).slice();
   updateFilterCount();
-  if (!STATE.list.length) { grid.replaceChildren(); st.replaceChildren(stateNode("没有符合条件的影片", "试试放宽筛选", null)); return; }
+  if (!STATE.list.length) { grid.replaceChildren(); st.replaceChildren(stateNode("没有符合条件的影片", "试试放宽筛选", null)); STATE.swapDir = null; return; }
   st.replaceChildren();
   var frag = document.createDocumentFragment();
   STATE.list.forEach(function (item) { frag.appendChild(buildCard(item)); });
   grid.replaceChildren(frag);
+  playGridEnter();         /* 真实内容铺好后再滑入一次 */
+  STATE.swapDir = null;    /* 仅切换分类时动画，筛选/加载更多不触发 */
   enrichPosters(STATE.list);
   if (!STATE.clientFilter && STATE.hasMore) {
     var more = el("button", "loadmore focusable"); more.setAttribute("data-fk", "loadmore");
@@ -987,11 +1158,23 @@ function renderFilters() {
   tools.appendChild(clr);
   frag.appendChild(tools);
   box.replaceChildren(frag);
+  syncFiltersOpen();
 }
 function syncFilterPills() {
   Array.from($("#filters").querySelectorAll(".fpill")).forEach(function (b) {
     b.classList.toggle("on", STATE.filters[b.getAttribute("data-fkey")] === b.getAttribute("data-fval"));
   });
+  syncFiltersOpen();
+}
+function syncFiltersOpen() {
+  var box = $("#filters"), btn = $("#ftoggle"); if (!box || !btn) return;
+  box.classList.toggle("collapsed", !STATE.filtersOpen);
+  btn.classList.toggle("open", STATE.filtersOpen);
+  var cnt = $("#ftoggleCount"); if (!cnt) return;
+  var n = 0, f = STATE.filters;
+  if (f.genre !== "全部") n++; if (f.region !== "全部") n++; if (f.year !== "全部") n++; if (f.sort !== "最新") n++;
+  cnt.textContent = n ? String(n) : "";
+  cnt.classList.toggle("hidden", !n);
 }
 
 /* ============================================================
@@ -1000,6 +1183,15 @@ function syncFilterPills() {
 function openDetail(item) { STATE.detail = item; history.pushState({ route: "detail", id: pick(item, "id", "") }, "", "#detail"); showDetail(item); }
 
 function metaRow(k, v) { var r = el("div", "metarow"); var kk = el("div", "k"); kk.textContent = k; var vv = el("div", "v"); vv.textContent = v; r.appendChild(kk); r.appendChild(vv); return r; }
+/* 多值字符串拆分（/ , 、 顿号等分隔），去空 */
+function splitVals(v) { return String(v == null ? "" : v).split(/\s*[\/,、，]\s*/).map(function (s) { return s.trim(); }).filter(function (s) { return s; }); }
+/* 元数据标签：可带前缀小标签（如“导演”），key=true 时高亮成金色 */
+function metaTag(label, value, key) {
+  var s = el("span", "mtag" + (key ? " key" : ""));
+  if (label) { var l = el("span", "ml"); l.textContent = label; s.appendChild(l); }
+  s.appendChild(document.createTextNode(value));
+  return s;
+}
 
 function renderDetailInfo(item) {
   $("#dTitle").textContent = pick(item, "title", "—") + (pick(item, "year", "") ? (" (" + item.year + ")") : "");
@@ -1011,10 +1203,18 @@ function renderDetailInfo(item) {
   if (num(item.imdb) > 0) { var im = el("span", "rate im"); im.textContent = "IMDb " + item.imdb; chips.appendChild(im); }
   if (num(item.douban) > 0) { var db = el("span", "rate db"); db.textContent = "豆瓣 " + item.douban; chips.appendChild(db); }
 
-  var mb = $("#metablk"); mb.replaceChildren();
-  [["别名","alias"],["类型","genre"],["国家","country"],["导演","director"],["时间","date"],["语言","language"],["演员","cast"]].forEach(function (p) {
-    var v = pick(item, p[1], ""); if (v) mb.appendChild(metaRow(p[0], v));
-  });
+  /* 元数据精简为一排圆角标签：国家 / 类型 / 时间 / 时长 / 导演 / 主要演员 */
+  var mb = $("#metablk"); mb.replaceChildren(); mb.className = "metatags";
+  var frag = document.createDocumentFragment();
+  splitVals(pick(item, "country", "")).forEach(function (c) { frag.appendChild(metaTag("", c, true)); });
+  splitVals(pick(item, "genre", "")).forEach(function (g) { frag.appendChild(metaTag("", g)); });
+  var when = pick(item, "date", "") || (pick(item, "year", "") ? String(item.year) : "");
+  if (when) frag.appendChild(metaTag("", when));
+  if (num(item.runtime) > 0) frag.appendChild(metaTag("", num(item.runtime) + " 分钟"));
+  var dirs = splitVals(pick(item, "director", ""));
+  if (dirs.length) frag.appendChild(metaTag("导演", dirs.slice(0, 2).join(" / ")));
+  splitVals(pick(item, "cast", "")).slice(0, 6).forEach(function (n) { frag.appendChild(metaTag("", n)); });
+  mb.appendChild(frag);
   if (!mb.children.length) mb.classList.add("hidden"); else mb.classList.remove("hidden");
 
   $("#dDesc").textContent = pick(item, "desc", "") || pick(item, "overview", "") || "暂无简介。下方资源可一键复制或推送播放。";
@@ -1054,7 +1254,7 @@ function renderStills(stills) {
   var wrap = $("#stillsWrap"), box = $("#stills");
   if (!stills || !stills.length) { wrap.classList.add("hidden"); box.replaceChildren(); return; }
   var frag = document.createDocumentFragment();
-  stills.forEach(function (u) { var s = el("div", "s"); var img = el("img"); img.loading = "lazy"; img.decoding = "async"; img.src = resUrl(u, CONFIG.imageHeaders); img.onerror = function () { this.style.display = "none"; }; s.appendChild(img); frag.appendChild(s); });
+  stills.forEach(function (u) { var s = el("div", "s"); s.appendChild(makeImg(u, "")); frag.appendChild(s); });
   box.replaceChildren(frag); wrap.classList.remove("hidden");
 }
 
@@ -1213,6 +1413,7 @@ function renderResourcesFromRows(rows) {
   if (!rows.length) { $("#resState").replaceChildren(stateNode("暂无可用资源", "可点右上角放大镜用原生聚合搜索", null)); $("#resgroups").replaceChildren(); return; }
   $("#resState").replaceChildren();
   STATE.expand = {};
+  STATE.resTier = null;
   renderResGroups(groupResources(rows));
   scheduleChecks();
 }
@@ -1220,29 +1421,43 @@ function renderResourcesFromRows(rows) {
 var RES_LIMIT = 6;
 function renderResGroups(ordered) {
   var box = $("#resgroups"); box.replaceChildren();
-  if (!ordered.length) return;
+  if (!ordered.length) { STATE.allRes = []; resetPlayQueue(); return; }
   STATE.allRes = [];
   if (!STATE.expand) STATE.expand = {};
-  var frag = document.createDocumentFragment();
+  /* 全部资源入队列/检测（不分当前显示的是哪类） */
+  ordered.forEach(function (grp) { grp.items.forEach(function (r) { STATE.allRes.push(r); }); });
+
+  /* 选中的画质类别：默认第一类（原盘优先），失效则回退第一类 */
+  var tiers = ordered.map(function (g) { return g.tier; });
+  if (!STATE.resTier || tiers.indexOf(STATE.resTier) === -1) STATE.resTier = tiers[0];
+
+  /* —— 类别标签：原盘 / 4K / 中字4K… 并排一行 —— */
+  var tabs = el("div", "restabs");
   ordered.forEach(function (grp) {
-    var g = el("div", "resgroup");
-    var gh = el("div", "gh");
-    var gt = el("span", "gtag " + tierClass(grp.tier)); gt.textContent = grp.tier; gh.appendChild(gt);
-    var cnt = el("span", "cnt"); cnt.textContent = grp.items.length + " 条"; gh.appendChild(cnt);
-    g.appendChild(gh);
-    var expanded = !!STATE.expand[grp.tier];
-    var show = expanded ? grp.items : grp.items.slice(0, RES_LIMIT);
-    grp.items.forEach(function (r) { STATE.allRes.push(r); });   /* 全部入队列/检测 */
-    show.forEach(function (r) { g.appendChild(buildResItem(r)); }); /* 只渲染前若干条 */
-    if (grp.items.length > RES_LIMIT) {
-      var more = el("button", "resmore focusable"); more.setAttribute("data-fk", "more-" + grp.tier);
-      more.textContent = expanded ? "收起" : ("展开全部 " + grp.items.length + " 条 ▾");
-      more.onclick = function () { STATE.expand[grp.tier] = !expanded; renderResGroups(ordered); };
-      g.appendChild(more);
-    }
-    frag.appendChild(g);
+    var tab = el("button", "restab focusable");
+    tab.setAttribute("data-tier", grp.tier);
+    tab.setAttribute("data-fk", "restab-" + grp.tier);
+    if (grp.tier === STATE.resTier) tab.classList.add("on");
+    var lbl = el("span", "rt-label"); lbl.textContent = grp.tier; tab.appendChild(lbl);
+    var cnt = el("span", "rt-cnt"); cnt.textContent = grp.items.length; tab.appendChild(cnt);
+    tab.onclick = function () { if (STATE.resTier === grp.tier) return; STATE.resTier = grp.tier; renderResGroups(ordered); };
+    tabs.appendChild(tab);
   });
-  box.replaceChildren(frag);
+  box.appendChild(tabs);
+
+  /* —— 下方资源框：只展示选中类别，切标签即换内容 —— */
+  var sel = ordered.filter(function (g) { return g.tier === STATE.resTier; })[0] || ordered[0];
+  var content = el("div", "resbox");
+  var expanded = !!STATE.expand[sel.tier];
+  var show = expanded ? sel.items : sel.items.slice(0, RES_LIMIT);
+  show.forEach(function (r) { content.appendChild(buildResItem(r)); });
+  if (sel.items.length > RES_LIMIT) {
+    var more = el("button", "resmore focusable"); more.setAttribute("data-fk", "more-" + sel.tier);
+    more.textContent = expanded ? "收起" : ("展开全部 " + sel.items.length + " 条 ▾");
+    more.onclick = function () { STATE.expand[sel.tier] = !expanded; renderResGroups(ordered); };
+    content.appendChild(more);
+  }
+  box.appendChild(content);
   resetPlayQueue();
 }
 function resBadges(r) {
@@ -1384,6 +1599,7 @@ function focusEl(el) {
   requestAnimationFrame(function () { var r = el.getBoundingClientRect(); if (r.top < 80 || r.bottom > (window.innerHeight - 20)) { try { el.scrollIntoView({ block: "center" }); } catch (e) { el.scrollIntoView(); } } });
 }
 function restoreHomeFocus() { if (lastHomeFocus && isVisibleFocusable(lastHomeFocus)) focusEl(lastHomeFocus); else { var f = focusables($("#home")); if (f.length) focusEl(f[0]); } }
+/* 按实际宽度自适应网格列数：手机 3，平板 4-6，TV 6（覆盖 CSS 媒体查询） */
 function gridColumns() {
   var grid = $("#grid"); if (!grid) return 3;
   var tpl = window.getComputedStyle(grid).getPropertyValue("grid-template-columns");
@@ -1432,6 +1648,62 @@ function onKey(e) {
 function setupTvInput() { if (!IS_TV) return; var q = $("#q"); q.setAttribute("readonly", "readonly"); q.addEventListener("blur", function () { q.setAttribute("readonly", "readonly"); }); }
 
 /* ============================================================
+   首页左右滑动切换分类
+   - 横向为主、位移够大、用时够短才触发，避免误伤竖向滚动
+   - 命中横向滚动条（分类条 / 筛选行 / 剧照 / 资源标签 / 输入框）时不接管
+   - 详情页与 TV 端不启用
+   ============================================================ */
+function setupSwipe() {
+  if (IS_TV) return;
+  var area = $("#home"); if (!area) return;
+  var sx = 0, sy = 0, st = 0, tracking = false;
+  area.addEventListener("touchstart", function (e) {
+    tracking = false;
+    if (document.body.classList.contains("detail-active")) return;
+    if (!e.touches || e.touches.length !== 1) return;
+    var t = e.target;
+    if (t && t.closest && t.closest(".nav, .filterrow, .stills, .restabs, input, textarea")) return;
+    var p = e.touches[0]; sx = p.clientX; sy = p.clientY; st = Date.now(); tracking = true;
+  });
+  area.addEventListener("touchend", function (e) {
+    if (!tracking) return; tracking = false;
+    var p = e.changedTouches && e.changedTouches[0]; if (!p) return;
+    var dx = p.clientX - sx, dy = p.clientY - sy, dt = Date.now() - st;
+    if (dt > 700) return;                          /* 太慢不算滑动 */
+    if (Math.abs(dx) < 60) return;                 /* 位移不够 */
+    if (Math.abs(dx) < Math.abs(dy) * 1.6) return; /* 必须以横向为主 */
+    switchCatBy(dx < 0 ? 1 : -1);                  /* 左滑下一个，右滑上一个 */
+  });
+}
+
+/* ============================================================
+   滚动到底自动加载更多（无限滚动）
+   - rAF 节流，距底 700px 内就预加载，滚动更顺滑
+   - 详情页 / 客户端筛选模式（演示数据）下不触发
+   ============================================================ */
+function nearListBottom() {
+  var doc = document.documentElement, b = document.body;
+  var y = window.pageYOffset || doc.scrollTop || b.scrollTop || 0;
+  var vh = window.innerHeight || doc.clientHeight || 0;
+  var full = Math.max(b.scrollHeight, doc.scrollHeight, b.offsetHeight, doc.offsetHeight);
+  return (y + vh) >= (full - 700);
+}
+var _scrollTick = false;
+function onScrollLoad() {
+  if (_scrollTick) return; _scrollTick = true;
+  requestAnimationFrame(function () {
+    _scrollTick = false;
+    if (document.body.classList.contains("detail-active")) return;
+    if (STATE.clientFilter || !STATE.hasMore || STATE.loadingMore) return;
+    if (nearListBottom()) loadMore();
+  });
+}
+function setupInfiniteScroll() {
+  window.addEventListener("scroll", onScrollLoad);
+  window.addEventListener("resize", onScrollLoad);
+}
+
+/* ============================================================
    路由
    ============================================================ */
 function onRoute(state) {
@@ -1452,12 +1724,14 @@ function boot() {
   Store.get("cat").then(function (v) { if (v && v !== STATE.cat && CATS.filter(function (c) { return c.key === v; }).length) { STATE.cat = v; renderNav(); renderGrid(); } });
   Store.get("noticeHidden").then(function (v) { if (v === "1") $("#notice").classList.add("hidden"); });
   Store.get("favs").then(function (v) { if (v) { try { STATE.favs = JSON.parse(v) || []; } catch (e) { STATE.favs = []; } if (STATE.detail) updateFavBtn(STATE.detail); } });
+  Store.get("filtersOpen").then(function (v) { STATE.filtersOpen = (v === "1"); syncFiltersOpen(); });
 
   var q = $("#q");
   function doSearch() { var kw = q.value.trim(); if (kw) searchTitle(kw); }
   $("#goBtn").onclick = doSearch;
   q.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.keyCode === 13) { e.preventDefault(); doSearch(); } });
   $("#noticeX").onclick = function () { $("#notice").classList.add("hidden"); Store.set("noticeHidden", "1"); };
+  $("#ftoggle").onclick = function () { STATE.filtersOpen = !STATE.filtersOpen; Store.set("filtersOpen", STATE.filtersOpen ? "1" : "0"); syncFiltersOpen(); };
 
   $("#backBtn").onclick = function () { history.back(); };
   $("#brand").onclick = function (e) { e.preventDefault(); if (document.body.classList.contains("detail-active")) history.back(); window.scrollTo(0, 0); };
@@ -1465,11 +1739,13 @@ function boot() {
   function nativeSearch() { var kw = pick(STATE.detail, "title", "") || $("#dTitle").textContent; fmReady().then(function (fm) { if (fm && fm.search) fm.search(kw, { direct: true }); else toast("请在 App 内使用原生搜索"); }); }
   $("#searchAgain").onclick = nativeSearch;
   $("#actFav").onclick = function () { toggleFav(STATE.detail); };
-  $("#actList").onclick = function () { var g = $("#resgroups"); if (g.firstChild) { var r = g.querySelector(".resitem"); if (r) { try { r.scrollIntoView({ block: "center" }); } catch (e) { r.scrollIntoView(); } } } else toast("资源检索中…"); };
+  $("#actList").onclick = function () { var g = $("#resgroups"); if (g.firstChild) { var anchor = g.querySelector(".restabs") || g.querySelector(".resitem"); if (anchor) { try { anchor.scrollIntoView({ block: "center" }); } catch (e) { anchor.scrollIntoView(); } } } else toast("资源检索中…"); };
   $("#actPlay").onclick = function () { playNext(); };
 
   document.addEventListener("keydown", onKey, true);
   setupTvInput();
+  setupSwipe();
+  setupInfiniteScroll();
 
   /* 横竖屏切换：详情页大图随朝向切换竖版/横版 */
   function onOrient() { if (STATE.detail && document.body.classList.contains("detail-active")) applyHeroImage(STATE.detail); }
