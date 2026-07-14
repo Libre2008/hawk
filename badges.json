@@ -27,6 +27,58 @@
       "type": "filter"
     },
     {
+      "id": "4k-ultra-hd",
+      "groupId": "resolution",
+      "name": "4K Ultra HD",
+      "pattern": "(?i)\\b(4k|2160p|uhd|ultra\\s*hd)\\b",
+      "imageURL": "https://raw.githubusercontent.com/9mousaa/BetterFormatter/main/images/4k.png",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled and bordered",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
+      "id": "1080p-full-hd",
+      "groupId": "resolution",
+      "name": "1080p Full HD",
+      "pattern": "(?i)\\b(1080p|fhd|full\\s*hd)\\b",
+      "imageURL": "https://raw.githubusercontent.com/9mousaa/BetterFormatter/main/images/1080p.png",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled and bordered",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
+      "id": "720p-hd",
+      "groupId": "resolution",
+      "name": "720p HD",
+      "pattern": "(?i)\\b720p\\b",
+      "imageURL": "https://raw.githubusercontent.com/9mousaa/BetterFormatter/main/images/720p.png",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled and bordered",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
+      "id": "480p-sd",
+      "groupId": "resolution",
+      "name": "480p SD",
+      "pattern": "(?i)\\b480p\\b",
+      "imageURL": "https://raw.githubusercontent.com/9mousaa/BetterFormatter/main/images/480p_sd.png",
+      "tagColor": "#00000000",
+      "borderColor": "#00000000",
+      "textColor": "#00000000",
+      "tagStyle": "filled and bordered",
+      "isEnabled": true,
+      "type": "filter"
+    },
+    {
       "id": "dolby-vision",
       "groupId": "video-tech",
       "name": "Dolby Vision",
@@ -226,6 +278,13 @@
     {
       "id": "source",
       "name": "Source",
+      "color": "#00000000",
+      "borderColor": "#00000000",
+      "isExpanded": true
+    },
+    {
+      "id": "resolution",
+      "name": "Resolution",
       "color": "#00000000",
       "borderColor": "#00000000",
       "isExpanded": true
