@@ -13,8 +13,8 @@
       "type": "filter"
     },
     {
-      "id": "bluray",
-      "name": "Blu-ray",
+      "id": "blu-ray-disc",
+      "name": "Blu-ray Disc",
       "pattern": "(?i)\\b(bluray|blu-ray|bdrip|brrip)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/blu_ray_disc.png",
       "tagColor": "#007FFF",
@@ -25,7 +25,7 @@
       "type": "filter"
     },
     {
-      "id": "webdl",
+      "id": "web-dl",
       "name": "WEB-DL",
       "pattern": "(?i)\\b(web[-_. ]dl|webrip|web-dl|web-rip)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/web_dl.png",
@@ -49,7 +49,7 @@
       "type": "filter"
     },
     {
-      "id": "dovi",
+      "id": "dolby-vision",
       "name": "Dolby Vision",
       "pattern": "(?i)\\b(dv|dovi|dolby[\\s._-]?vision)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/dolby_vision.png",
@@ -61,7 +61,7 @@
       "type": "filter"
     },
     {
-      "id": "hdr10plus",
+      "id": "hdr10-plus",
       "name": "HDR10+",
       "pattern": "(?i)\\b(hdr10\\+|hdr10plus)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/hdr10_plus.png",
@@ -121,7 +121,7 @@
       "type": "filter"
     },
     {
-      "id": "atmos",
+      "id": "dolby-atmos",
       "name": "Dolby Atmos",
       "pattern": "(?i)\\b(atmos|dolby[\\s._-]?atmos)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/dolby_atmos.png",
@@ -145,7 +145,7 @@
       "type": "filter"
     },
     {
-      "id": "dtsx",
+      "id": "dts-x",
       "name": "DTS:X",
       "pattern": "(?i)\\b(dts[\\s._-]?x|dts[\\s._-]?hd[\\s._-]?x)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/dts_x.png",
@@ -157,7 +157,7 @@
       "type": "filter"
     },
     {
-      "id": "dtshd",
+      "id": "dts-hd",
       "name": "DTS-HD",
       "pattern": "(?i)\\b(dts[\\s._-]?hd|dtshd|dts[\\s._-]?ma)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/dts_hd.png",
@@ -193,7 +193,7 @@
       "type": "filter"
     },
     {
-      "id": "ddplus",
+      "id": "dd-plus",
       "name": "DD+ / E-AC3",
       "pattern": "(?i)\\b(e[-_.]?ac3|ddp|dd\\+)\\b",
       "imageURL": "https://raw.githubusercontent.com/leonevz/Elite-Badges/main/Badges/dd_plus.png",
